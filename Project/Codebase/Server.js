@@ -2,6 +2,15 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+
+// Block that allows us to manage cookies. It requires the server host to have an additional middleware installation. 
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const app = express();
+
+// cookieParser middleware
+app.use(cookieParser());
+
 // Default port for the program development. 
 const PORT = 8080;
 
@@ -23,7 +32,6 @@ function saveData(data) {
 const server = http.createServer((req, res) => {
   const method = req.method;
   const url = req.url;
-
   console.log(`📩 ${method} ${url}`);
 
   // Now, depending on the method this will be handled by a different work. 
@@ -202,4 +210,17 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, () => {
   console.log(`🚀 Servidor escuchando en http://localhost:${PORT}`);
 });
+
+// Inside this, we are implementing a route that quickly adds cookies to the user, and notifies them. 
+// It works on my home machine, but may not work proper outside due to setup issues. 
+app.get('/setcookie', function (req, res) {
+
+    res.cookie('usuario', 'monstruodelasgalletas');
+    res.send('Cookies added');
+});
+// Adds another route that lets us simply request the cookies that the client has gathered. 
+app.get('/getcookie', function (req, res) {
+    res.send(req.cookies);
+});
+
 
