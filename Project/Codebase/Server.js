@@ -8,8 +8,16 @@ const express = require('express');
 const cookieParser = require('cookie-parser');
 const app = express();
 
+// Block that allows us to write logs to a file on the system. 
+var morgan = require('morgan'); 
+// Creates a write stream for the logs themselves. 
+var accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+
 // cookieParser middleware
 app.use(cookieParser());
+
+// log middleware
+app.use(morgan('combined', { stream: accessLogStream }))
 
 // Default port for the program development. 
 const PORT = 8080;
